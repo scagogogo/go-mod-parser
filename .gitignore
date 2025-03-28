@@ -1,0 +1,90 @@
+# Go语言特有的忽略项
+# 二进制文件
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# 测试二进制文件，构建产物和临时文件
+*.test
+*.out
+/_test/
+/tmp/
+
+# 依赖目录（如果使用vendor）
+/vendor/
+
+# Go相关缓存
+.go/
+
+# 覆盖率工具生成的文件
+*.coverprofile
+coverage.txt
+
+# macOS系统文件
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows系统文件
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux系统文件
+*~
+.directory
+
+# IDE和编辑器文件
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# GoLand/IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.externalToolBuilders/
+*.launch
+.classpath
+.factorypath
+.buildpath
+.target
+
+# 其他编辑器
+.atom/
+.buildlog/
+
+# 环境配置文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 日志文件
+*.log
+logs/ 
