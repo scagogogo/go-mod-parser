@@ -25,6 +25,38 @@ jobs:
 
     - name: Run tests
       run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+      
+    - name: Run example code
+      run: |
+        # 运行基础解析示例
+        cd examples/01_basic_parsing
+        go run main.go ../../go.mod
+        cd ../..
+        
+        # 运行查找和解析示例
+        cd examples/02_find_and_parse
+        go run main.go ../../
+        cd ../..
+        
+        # 运行依赖检查示例
+        cd examples/03_check_dependencies
+        go run main.go -f ../../go.mod
+        cd ../..
+        
+        # 运行替换和排除规则示例
+        cd examples/04_replaces_and_excludes
+        go run main.go -f ../../go.mod
+        cd ../..
+        
+        # 运行版本撤回示例
+        cd examples/05_retract_versions
+        go run main.go -f ../../go.mod
+        cd ../..
+        
+        # 运行编程API示例
+        cd examples/06_programmatic_api
+        go run main.go
+        cd ../..
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/scagogogo/go-mod-parser/pkg/module"
+	"github.com/scagogogo/go-mod-parser/pkg/utils"
 )
 
 // ParseFromReader 从io.Reader解析go.mod文件
@@ -136,4 +137,28 @@ func handleBlockLine(mod *module.Module, blockType, line string) error {
 	default:
 		return fmt.Errorf("unknown block type: %s", blockType)
 	}
+}
+
+// FindAndParseGoModFile 在指定目录及其父目录中查找并解析go.mod文件
+func FindAndParseGoModFile(dir string) (*module.Module, error) {
+	path, err := utils.FindGoModFile(dir)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGoModFile(path)
+}
+
+// FindAndParseGoModInCurrentDir 在当前目录及其父目录中查找并解析go.mod文件
+func FindAndParseGoModInCurrentDir() (*module.Module, error) {
+	return FindAndParseGoModFile("")
+}
+
+// ParseGoModFile 解析指定路径的go.mod文件
+func ParseGoModFile(path string) (*module.Module, error) {
+	return ParseFromFile(path)
+}
+
+// ParseGoModContent 解析go.mod文件内容
+func ParseGoModContent(content string) (*module.Module, error) {
+	return ParseFromString(content)
 }

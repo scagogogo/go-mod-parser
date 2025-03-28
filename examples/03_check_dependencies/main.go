@@ -141,13 +141,13 @@ func analyzeModule(mod *module.Module, checkDep string, listIndirect, listDirect
 }
 
 // findReplacement 查找依赖的替换规则
-func findReplacement(mod *module.Module, path string) (rep module.Replace, found bool) {
+func findReplacement(mod *module.Module, path string) (*module.Replace, bool) {
 	for _, r := range mod.Replaces {
 		if r.Old.Path == path {
 			return r, true
 		}
 	}
-	return module.Replace{}, false
+	return nil, false
 }
 
 // isExcluded 检查依赖是否被排除
