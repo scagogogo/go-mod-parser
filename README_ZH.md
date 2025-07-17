@@ -6,6 +6,14 @@
 [![Tests](https://github.com/scagogogo/go-mod-parser/actions/workflows/go-test.yml/badge.svg)](https://github.com/scagogogo/go-mod-parser/actions/workflows/go-test.yml)
 [![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://scagogogo.github.io/go-mod-parser/)
 
+---
+
+## 🌐 [📖 **访问我们的文档网站**](https://scagogogo.github.io/go-mod-parser/zh/) 🌐
+
+**🚀 [立即开始](https://scagogogo.github.io/go-mod-parser/zh/) | [🇨🇳 中文文档](https://scagogogo.github.io/go-mod-parser/zh/) | [🇺🇸 English](https://scagogogo.github.io/go-mod-parser/)**
+
+---
+
 Go Mod Parser 是一个功能完整、使用简便的 `go.mod` 文件解析库，它将 go.mod 文件转换为结构化的 Go 对象，使得依赖管理和模块分析变得更加容易。无论是构建依赖分析工具、模块管理系统，还是需要检查项目依赖的 CI/CD 流程，本库都能提供可靠的支持。
 
 ## 📖 文档
