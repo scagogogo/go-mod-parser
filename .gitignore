@@ -15,12 +15,20 @@
 # 依赖目录（如果使用vendor）
 /vendor/
 
-# Go相关缓存
+# Go相关缓存和模块
 .go/
+go.work
+go.work.sum
+
+# Go 构建缓存
+.gocache/
 
 # 覆盖率工具生成的文件
 *.coverprofile
 coverage.txt
+coverage.out
+coverage_*.out
+*.cover
 
 # macOS系统文件
 .DS_Store
@@ -87,4 +95,112 @@ local.properties
 
 # 日志文件
 *.log
-logs/ 
+logs/
+
+# 文档网站相关
+# Node.js 依赖
+docs/node_modules/
+
+# VitePress 构建输出
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/.temp/
+
+# npm/yarn 相关
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# 构建和部署相关
+dist/
+build/
+.output/
+.nuxt/
+.next/
+.vercel/
+.netlify/
+
+# 临时文件和缓存
+.cache/
+.parcel-cache/
+.vite/
+.turbo/
+
+# 安全和配置文件
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+config.local.*
+secrets.yaml
+secrets.yml
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 备份文件
+*.backup
+*.bak
+*.orig
+
+# 压缩文件
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# 性能分析文件
+*.prof
+*.pprof
+cpu.prof
+mem.prof
+block.prof
+mutex.prof
+
+# 调试文件
+debug
+debug.test
+__debug_bin*
+
+# 文档生成工具
+.docusaurus/
+.hugo_build.lock
+
+# CI/CD 相关
+.github/workflows/secrets/
+.circleci/
+.travis.yml
+.appveyor.yml
+.gitlab-ci.yml
+
+# 容器相关
+Dockerfile.local
+docker-compose.override.yml
+.dockerignore.local
+
+# 开发工具配置
+.air.toml
+.realize.yaml
+.fresh.conf
+.gin-bin
+
+# 测试相关
+testdata/output/
+test_output/
+*.test.log
+
+# 本地开发文件
+local/
+dev/
+scratch/
+playground/
+
+# 项目特定的忽略项
+# 如果有特定的构建脚本输出
+scripts/output/
+tools/bin/
