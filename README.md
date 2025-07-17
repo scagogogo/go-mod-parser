@@ -4,28 +4,37 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/scagogogo/go-mod-parser)](https://goreportcard.com/report/github.com/scagogogo/go-mod-parser)
 [![License](https://img.shields.io/github/license/scagogogo/go-mod-parser)](LICENSE)
 [![Tests](https://github.com/scagogogo/go-mod-parser/actions/workflows/go-test.yml/badge.svg)](https://github.com/scagogogo/go-mod-parser/actions/workflows/go-test.yml)
+[![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://scagogogo.github.io/go-mod-parser/)
 
-Go Mod Parser 是一个功能完整、使用简便的 `go.mod` 文件解析库，它将 go.mod 文件转换为结构化的 Go 对象，使得依赖管理和模块分析变得更加容易。无论是构建依赖分析工具、模块管理系统，还是需要检查项目依赖的 CI/CD 流程，本库都能提供可靠的支持。
+Go Mod Parser is a comprehensive and easy-to-use library for parsing `go.mod` files. It converts go.mod files into structured Go objects, making dependency management and module analysis easier. Whether you're building dependency analysis tools, module management systems, or need to check project dependencies in CI/CD pipelines, this library provides reliable support.
 
-## 特性
+## 📖 Documentation
 
-- ✅ **完整支持所有指令** - 解析 `module`、`go`、`require`、`replace`、`exclude` 和 `retract` 指令
-- 🧩 **结构化数据** - 将 go.mod 文件转换为易于使用的 Go 结构体
-- 🔍 **自动查找** - 能在项目及父目录中自动定位 go.mod 文件
-- 🔄 **依赖分析** - 提供丰富的辅助函数用于分析模块依赖关系
-- 📝 **注释支持** - 正确处理 `// indirect` 标记和其他注释
-- 🧪 **测试完善** - 完整的单元测试覆盖确保解析的准确性
-- 📚 **示例丰富** - 多个实用示例帮助快速上手
+**[📚 Complete Documentation](https://scagogogo.github.io/go-mod-parser/)** - Visit our comprehensive documentation website
 
-## 安装
+**Languages:**
+- [🇺🇸 English Documentation](https://scagogogo.github.io/go-mod-parser/)
+- [🇨🇳 中文文档](https://scagogogo.github.io/go-mod-parser/zh/)
+
+## Features
+
+- ✅ **Complete Directive Support** - Parse all go.mod directives: `module`, `go`, `require`, `replace`, `exclude`, and `retract`
+- 🧩 **Structured Data** - Convert go.mod files into easy-to-use Go structs
+- 🔍 **Auto Discovery** - Automatically locate go.mod files in project and parent directories
+- 🔄 **Dependency Analysis** - Rich helper functions for analyzing module dependencies
+- 📝 **Comment Support** - Properly handle `// indirect` markers and other comments
+- 🧪 **Well Tested** - Comprehensive unit test coverage ensuring parsing accuracy
+- 📚 **Rich Examples** - Multiple practical examples for quick start
+
+## Installation
 
 ```bash
 go get github.com/scagogogo/go-mod-parser
 ```
 
-## 快速开始
+## Quick Start
 
-### 解析指定的 go.mod 文件
+### Parse a go.mod File
 
 ```go
 package main
@@ -38,18 +47,18 @@ import (
 )
 
 func main() {
-    // 解析指定路径的 go.mod 文件
+    // Parse a go.mod file from path
     mod, err := pkg.ParseGoModFile("path/to/go.mod")
     if err != nil {
-        log.Fatalf("解析go.mod文件失败: %v", err)
+        log.Fatalf("Failed to parse go.mod: %v", err)
     }
     
-    // 访问解析结果
-    fmt.Printf("模块名: %s\n", mod.Name)
-    fmt.Printf("Go版本: %s\n", mod.GoVersion)
+    // Access parsed data
+    fmt.Printf("Module: %s\n", mod.Name)
+    fmt.Printf("Go Version: %s\n", mod.GoVersion)
     
-    // 打印所有依赖
-    fmt.Println("依赖项:")
+    // List all dependencies
+    fmt.Println("Dependencies:")
     for _, req := range mod.Requires {
         indirect := ""
         if req.Indirect {
@@ -60,19 +69,19 @@ func main() {
 }
 ```
 
-### 自动查找并解析 go.mod 文件
+### Auto-discover and Parse
 
 ```go
-// 在当前目录及其父目录中查找并解析 go.mod 文件
+// Find and parse go.mod in current directory or parent directories
 mod, err := pkg.FindAndParseGoModInCurrentDir()
 if err != nil {
-    log.Fatalf("查找并解析go.mod文件失败: %v", err)
+    log.Fatalf("Failed to find and parse go.mod: %v", err)
 }
 
-fmt.Printf("找到并解析模块: %s\n", mod.Name)
+fmt.Printf("Found and parsed module: %s\n", mod.Name)
 ```
 
-### 解析 go.mod 内容字符串
+### Parse go.mod Content
 
 ```go
 content := `module github.com/example/module
@@ -82,123 +91,139 @@ go 1.21
 require github.com/stretchr/testify v1.8.4
 `
 
-// 解析 go.mod 内容
+// Parse go.mod content
 mod, err := pkg.ParseGoModContent(content)
 if err != nil {
-    log.Fatalf("解析go.mod内容失败: %v", err)
+    log.Fatalf("Failed to parse go.mod content: %v", err)
 }
 
-fmt.Printf("模块名: %s\n", mod.Name)
+fmt.Printf("Module: %s\n", mod.Name)
 ```
 
-## 主要功能
+## Main Features
 
-### 1. 完整解析 go.mod 文件结构
+### 1. Complete go.mod File Structure Parsing
 
-解析 go.mod 文件中的所有标准指令：
+Parse all standard directives in go.mod files:
 
-- **module** - 模块声明
-- **go** - Go 版本要求
-- **require** - 依赖声明（包括 indirect 标记）
-- **replace** - 替换规则
-- **exclude** - 排除规则
-- **retract** - 版本撤回（支持单版本和版本范围）
+- **module** - Module declaration
+- **go** - Go version requirement
+- **require** - Dependency declarations (including indirect markers)
+- **replace** - Replacement rules
+- **exclude** - Exclusion rules
+- **retract** - Version retractions (supports single versions and version ranges)
 
-### 2. 丰富的辅助函数
+### 2. Rich Helper Functions
 
 ```go
-// 检查特定依赖
+// Check specific dependencies
 if pkg.HasRequire(mod, "github.com/stretchr/testify") {
     req := pkg.GetRequire(mod, "github.com/stretchr/testify")
-    fmt.Printf("依赖版本: %s (间接依赖: %v)\n", req.Version, req.Indirect)
+    fmt.Printf("Dependency version: %s (indirect: %v)\n", req.Version, req.Indirect)
 }
 
-// 检查替换规则
+// Check replacement rules
 if pkg.HasReplace(mod, "github.com/old/pkg") {
     rep := pkg.GetReplace(mod, "github.com/old/pkg")
-    fmt.Printf("替换: %s => %s %s\n", rep.Old.Path, rep.New.Path, rep.New.Version)
+    fmt.Printf("Replace: %s => %s %s\n", rep.Old.Path, rep.New.Path, rep.New.Version)
 }
 
-// 检查排除规则
+// Check exclusion rules
 if pkg.HasExclude(mod, "github.com/problematic/pkg", "v1.0.0") {
-    fmt.Println("该版本已被排除")
+    fmt.Println("This version is excluded")
 }
 
-// 检查版本撤回
+// Check version retractions
 if pkg.HasRetract(mod, "v1.0.0") {
-    fmt.Println("该版本已被撤回")
+    fmt.Println("This version has been retracted")
 }
 ```
 
-### 3. 完整的 API
+### 3. Complete API
 
-详见 [pkg.go.dev 文档](https://pkg.go.dev/github.com/scagogogo/go-mod-parser)
+See [Documentation](https://scagogogo.github.io/go-mod-parser/) for detailed API reference.
 
-| 函数 | 描述 |
-|------|------|
-| `ParseGoModFile(path)` | 解析指定路径的 go.mod 文件 |
-| `ParseGoModContent(content)` | 解析 go.mod 文件内容字符串 |
-| `FindAndParseGoModFile(dir)` | 在指定目录及其父目录中查找并解析 go.mod 文件 |
-| `FindAndParseGoModInCurrentDir()` | 在当前目录及其父目录中查找并解析 go.mod 文件 |
-| `HasRequire(mod, path)` | 检查模块是否有特定的依赖 |
-| `GetRequire(mod, path)` | 获取模块的特定依赖 |
-| `HasReplace(mod, path)` | 检查模块是否有特定的替换规则 |
-| `GetReplace(mod, path)` | 获取模块的特定替换规则 |
-| `HasExclude(mod, path, version)` | 检查模块是否有特定的排除规则 |
-| `HasRetract(mod, version)` | 检查模块是否有特定的撤回版本 |
+| Function | Description |
+|----------|-------------|
+| `ParseGoModFile(path)` | Parse go.mod file from path |
+| `ParseGoModContent(content)` | Parse go.mod content string |
+| `FindAndParseGoModFile(dir)` | Find and parse go.mod in directory and parent directories |
+| `FindAndParseGoModInCurrentDir()` | Find and parse go.mod in current directory and parent directories |
+| `HasRequire(mod, path)` | Check if module has specific dependency |
+| `GetRequire(mod, path)` | Get specific dependency of module |
+| `HasReplace(mod, path)` | Check if module has specific replacement rule |
+| `GetReplace(mod, path)` | Get specific replacement rule of module |
+| `HasExclude(mod, path, version)` | Check if module has specific exclusion rule |
+| `HasRetract(mod, version)` | Check if module has specific retracted version |
 
-## 示例
+## Examples
 
-项目包含多个完整的示例，展示不同使用场景：
+The project includes multiple complete examples demonstrating different usage scenarios:
 
-- [00_simple_parser](examples/00_simple_parser) - 简单命令行工具示例
-- [01_basic_parsing](examples/01_basic_parsing) - 基础解析示例
-- [02_find_and_parse](examples/02_find_and_parse) - 查找和解析示例
-- [03_check_dependencies](examples/03_check_dependencies) - 依赖检查示例
-- [04_replaces_and_excludes](examples/04_replaces_and_excludes) - 替换和排除规则示例
-- [05_retract_versions](examples/05_retract_versions) - 版本撤回示例
-- [06_programmatic_api](examples/06_programmatic_api) - 编程 API 示例
+- [00_simple_parser](examples/00_simple_parser) - Simple command-line tool example
+- [01_basic_parsing](examples/01_basic_parsing) - Basic parsing example
+- [02_find_and_parse](examples/02_find_and_parse) - Find and parse example
+- [03_check_dependencies](examples/03_check_dependencies) - Dependency checking example
+- [04_replaces_and_excludes](examples/04_replaces_and_excludes) - Replace and exclude rules example
+- [05_retract_versions](examples/05_retract_versions) - Version retraction example
+- [06_programmatic_api](examples/06_programmatic_api) - Programmatic API example
 
-详细说明请查看 [examples/README.md](examples/README.md)。
+For detailed explanations, see [examples/README.md](examples/README.md).
 
-## 项目结构
+## Project Structure
 
 ```
 pkg/
-├── api.go             # 主要公共 API
-├── module/            # 模块数据结构定义
-├── parser/            # go.mod 文件解析逻辑
-└── utils/             # 工具函数
+├── api.go             # Main public API
+├── module/            # Module data structure definitions
+├── parser/            # go.mod file parsing logic
+└── utils/             # Utility functions
 ```
 
-## 应用场景
+## Use Cases
 
-- 构建依赖分析工具
-- 模块版本管理系统
-- CI/CD 流程中的依赖检查
-- Go 项目构建工具
-- 模块关系可视化
-- 依赖更新推荐系统
+- Build dependency analysis tools
+- Module version management systems
+- Dependency checking in CI/CD pipelines
+- Go project build tools
+- Module relationship visualization
+- Dependency update recommendation systems
 
-## 参考文档
+## Testing
 
-以下是关于 Go 模块和 go.mod 文件格式的官方参考文档：
-
-1. [Go Modules Reference](https://go.dev/ref/mod) - Go 模块系统的权威参考
-2. [Go Modules Wiki](https://github.com/golang/go/wiki/Modules) - 更多技术细节和示例
-3. [Go 命令文档](https://go.dev/doc/modules/gomod-ref) - go.mod 文件格式详细参考
-4. [Go Modules: retract directive](https://go.dev/doc/modules/version-numbers#retract) - retract 指令说明
-5. [Go 语言规范](https://go.dev/ref/spec) - Go 语言官方规范
-
-## 贡献
-
-欢迎提交 Issue 和 Pull Request 来改进这个项目。请确保提交前运行测试并保持代码风格一致。
+The library has comprehensive test coverage (96.1%):
 
 ```bash
-# 运行测试
+# Run tests
 go test -v ./...
+
+# Run tests with coverage
+go test -cover ./...
 ```
 
-## 许可证
+## Contributing
 
-本项目基于 [MIT 许可证](LICENSE) 开源。 
+Contributions are welcome! Please submit Issues and Pull Requests to improve this project. Make sure to run tests and maintain code style consistency before submitting.
+
+```bash
+# Run tests
+go test -v ./...
+
+# Run examples
+cd examples/01_basic_parsing
+go run main.go ../../go.mod
+```
+
+## License
+
+This project is open source under the [MIT License](LICENSE).
+
+## Reference Documentation
+
+Here are official reference documents about Go modules and go.mod file format:
+
+1. [Go Modules Reference](https://go.dev/ref/mod) - Authoritative reference for Go module system
+2. [Go Modules Wiki](https://github.com/golang/go/wiki/Modules) - More technical details and examples
+3. [Go Command Documentation](https://go.dev/doc/modules/gomod-ref) - Detailed go.mod file format reference
+4. [Go Modules: retract directive](https://go.dev/doc/modules/version-numbers#retract) - retract directive explanation
+5. [Go Language Specification](https://go.dev/ref/spec) - Official Go language specification
