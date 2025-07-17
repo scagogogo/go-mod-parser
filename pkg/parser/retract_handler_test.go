@@ -153,6 +153,26 @@ func TestParseRetractBlockLine(t *testing.T) {
 			line:        "invalid format",
 			expectError: true,
 		},
+		{
+			name:        "invalid version range - missing closing bracket",
+			line:        "[v1.0.0, v1.9.9",
+			expectError: true,
+		},
+		{
+			name:        "invalid version range - wrong format",
+			line:        "[v1.0.0]",
+			expectError: true,
+		},
+		{
+			name:        "invalid version - doesn't start with v",
+			line:        "1.0.0",
+			expectError: true,
+		},
+		{
+			name:        "empty version",
+			line:        "",
+			expectError: false,
+		},
 	}
 
 	for _, tt := range tests {

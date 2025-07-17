@@ -2,6 +2,8 @@ package parser
 
 import (
 	"io"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -93,6 +95,26 @@ func TestHandleSingleLine(t *testing.T) {
 		{
 			name:        "invalid line",
 			line:        "invalid content",
+			expectError: true,
+		},
+		{
+			name:        "unrecognized line format",
+			line:        "some random text that doesn't match any pattern",
+			expectError: true,
+		},
+		{
+			name:        "comment line",
+			line:        "// this is a comment",
+			expectError: true,
+		},
+		{
+			name:        "empty line",
+			line:        "",
+			expectError: true,
+		},
+		{
+			name:        "whitespace only line",
+			line:        "   \t   ",
 			expectError: true,
 		},
 	}
@@ -297,4 +319,145 @@ go 1.21
 	assert.NoError(t, err)
 	assert.Equal(t, "github.com/example/module", mod.Name)
 	assert.Equal(t, "1.21", mod.GoVersion)
+}
+
+func TestFindAndParseGoModInCurrentDir(t *testing.T) {
+	// 保存当前工作目录
+	originalWd, err := os.Getwd()
+	assert.NoError(t, err)
+	defer os.Chdir(originalWd)
+
+	// 创建临时目录并切换到该目录
+	tempDir := t.TempDir()
+	err = os.Chdir(tempDir)
+	assert.NoError(t, err)
+
+	// 在当前目录创建go.mod文件
+	content := `module github.com/example/test
+
+go 1.21
+`
+	err = os.WriteFile("go.mod", []byte(content), 0644)
+	assert.NoError(t, err)
+
+	// 测试在当前目录查找并解析
+	mod, err := FindAndParseGoModInCurrentDir()
+	assert.NoError(t, err)
+	assert.Equal(t, "github.com/example/test", mod.Name)
+}
+
+func TestFindAndParseGoModFile_Success(t *testing.T) {
+	// 创建临时目录结构
+	tempDir := t.TempDir()
+	subDir := filepath.Join(tempDir, "subdir")
+	err := os.Mkdir(subDir, 0755)
+	assert.NoError(t, err)
+
+	// 在父目录创建go.mod文件
+	content := `module github.com/example/test
+
+go 1.21
+`
+	err = os.WriteFile(filepath.Join(tempDir, "go.mod"), []byte(content), 0644)
+	assert.NoError(t, err)
+
+	// 从子目录查找并解析
+	mod, err := FindAndParseGoModFile(subDir)
+	assert.NoError(t, err)
+	assert.Equal(t, "github.com/example/test", mod.Name)
+}
+
+func TestFindAndParseGoModFile_NotFound(t *testing.T) {
+	// 测试在没有go.mod的目录中查找
+	tempDir := t.TempDir()
+	_, err := FindAndParseGoModFile(tempDir)
+	assert.Error(t, err)
+}
+
+func TestParseGoModFile_Success(t *testing.T) {
+	// 创建临时go.mod文件
+	tempDir := t.TempDir()
+	goModPath := filepath.Join(tempDir, "go.mod")
+	content := `module github.com/example/test
+
+go 1.21
+`
+	err := os.WriteFile(goModPath, []byte(content), 0644)
+	assert.NoError(t, err)
+
+	// 测试解析文件
+	mod, err := ParseGoModFile(goModPath)
+	assert.NoError(t, err)
+	assert.Equal(t, "github.com/example/test", mod.Name)
+}
+
+func TestParseGoModContent_Success(t *testing.T) {
+	content := `module github.com/example/test
+
+go 1.21
+`
+	mod, err := ParseGoModContent(content)
+	assert.NoError(t, err)
+	assert.Equal(t, "github.com/example/test", mod.Name)
+}
+
+func TestParseFromReader_ComplexContent(t *testing.T) {
+	content := `module github.com/example/test
+
+go 1.21
+
+require (
+	github.com/stretchr/testify v1.8.4
+	github.com/example/dep v1.0.0 // indirect
+)
+
+replace (
+	github.com/old/pkg => github.com/new/pkg v1.0.0
+)
+
+exclude (
+	github.com/bad/pkg v1.0.0
+)
+
+retract (
+	v1.0.1 // security issue
+	[v1.0.2, v1.0.5] // broken builds
+)
+
+// This is a comment
+// Another comment
+`
+	r := strings.NewReader(content)
+	mod, err := ParseFromReader(r)
+	assert.NoError(t, err)
+	assert.Equal(t, "github.com/example/test", mod.Name)
+	assert.Equal(t, "1.21", mod.GoVersion)
+	assert.Len(t, mod.Requires, 2)
+	assert.Len(t, mod.Replaces, 1)
+	assert.Len(t, mod.Excludes, 1)
+	assert.Len(t, mod.Retracts, 2)
+}
+
+func TestParseFromReader_ErrorInBlockLine(t *testing.T) {
+	content := `module github.com/example/test
+
+require (
+	github.com/example/pkg
+)
+`
+	r := strings.NewReader(content)
+	_, err := ParseFromReader(r)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "line 4")
+}
+
+func TestParseFromReader_ErrorInSingleLine(t *testing.T) {
+	content := `module github.com/example/test
+
+invalid single line
+`
+	r := strings.NewReader(content)
+	_, err := ParseFromReader(r)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "line 3")
 }
